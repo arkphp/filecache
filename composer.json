@@ -1,0 +1,17 @@
+{
+    "name": "ddliu/filecache",
+    "description": "Cache with file system",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "dong",
+            "email": "ddliuhb@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "ddliu\\filecache\\": "src/"
+        }
+    }
+}
