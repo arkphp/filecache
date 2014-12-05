@@ -1,4 +1,4 @@
-# ddliu/filecache
+# filecache [![Build Status](https://travis-ci.org/ddliu/php-filecache.svg)](https://travis-ci.org/ddliu/php-filecache)
 
 Cache with file system.
 
