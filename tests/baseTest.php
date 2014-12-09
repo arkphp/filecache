@@ -11,6 +11,9 @@ class BaseTest extends PHPUnit_Framework_TestCase {
 
     public function tearDown() {
         $this->cache->clear();
+
+        // test clear twice
+        $this->cache->clear();
     }
 
     public function testSet() {

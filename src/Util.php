@@ -19,8 +19,12 @@ class Util {
      * @return boolean
      */
     public static function removeDir($path) {
+        if (!is_dir($path)) {
+            return true;
+        }
+
         if (!$dirh = opendir($path)) {
-            return !is_dir($path);
+            return false;
         }
 
         $result = true;
