@@ -14,6 +14,7 @@ class FileCache {
         $this->options = array_merge(array(
             'root' => '.',
             'hash' => 'md5',
+            'serialize' => 'php',
             'depth' => 3,
             'compress' => false,
             'ttl' => 0,
@@ -24,41 +25,43 @@ class FileCache {
      * Set cache
      * @param string $key The cache key
      * @param mixed $data Data to store
-     * @param int $ttl Time to live, use the construct option by default.
-     * @param boolean $compress Compress or not, use the construct option by default.
+     * @param array $options Override default options
      */
-    public function set($key, $data, $ttl = null, $compress = null)
+    public function set($key, $data, $options = array())
     {
         $path = $this->getPath($key);
-        if ($compress === null) {
-            $compress = $this->options['compress'];
+        $options = array_merge(array(
+            'serialize' => $this->options['serialize'],
+            'ttl' => $this->options['ttl'],
+            'compress' => $this->options['compress']?1:0
+        ), $options);
+
+        if (isset($options['ttl']) && $options['ttl']) {
+            $options['expires'] = time() + $options['ttl'];
         }
 
-        if ($ttl === null) {
-            $ttl = $this->options['ttl'];
+        if (isset($options['ttl'])) {
+            unset($options['ttl']);
         }
 
-        $meta = array(
-        );
-
-        if ($compress) {
-            $meta['compress'] = 1;
-        }
-
-        if ($ttl) {
-            $meta['expires'] = time() + $ttl;
-        }
-
-        $meta['time'] = time();
+        $options['time'] = time();
 
         $content = '';
-        foreach ($meta as $key => $value) {
+        foreach ($options as $key => $value) {
             $content .= $key . ':' . $value . "\n";
         }
 
         $content .= "\n";
 
-        $content .=  $this->encode($data, $compress);
+        // serialize
+        $data = $this->serialize($data, $options['serialize']);
+
+        // compress
+        if ($options['compress']) {
+            $data = gzcompress($data);
+        }
+
+        $content .=  $data;
 
         return Util::writeFile($path, $content);
     }
@@ -83,7 +86,15 @@ class FileCache {
             return false;
         }
 
-        return $this->decode($data, !empty($meta['compress']));
+        // uncompress
+        if ($meta['compress']) {
+            $data = gzuncompress($data);
+        }
+
+        // unserialize
+        $data = $this->unserialize($data, $meta['serialize']);
+
+        return $data;
     }
 
     /**
@@ -197,21 +208,35 @@ class FileCache {
         return implode('/', $parts);
     }
 
-    protected function encode($data, $compress) {
-        $data = json_encode($data);
-
-        if ($compress) {
-            $data = gzcompress($data);
+    protected function serialize($data, $type) {
+        if ($type === 'raw') {
+            return (string) $data;
         }
 
-        return $data;
+        if ($type === 'json') {
+            return json_encode($data);
+        }
+
+        if ($type === 'php') {
+            return serialize($data);
+        }
+
+        throw new \Exception('Unknown serialization type: '.$type);
     }
 
-    protected function decode($data, $isCompress) {
-        if ($isCompress) {
-            $data = gzuncompress($data);
+    protected function unserialize($data, $type) {
+        if ($type === 'raw') {
+            return $data;
         }
 
-        return json_decode($data, true);
+        if ($type === 'json') {
+            return json_decode($data, true);
+        }
+
+        if ($type === 'php') {
+            return unserialize($data);
+        }
+
+        throw new \Exception('Unknown serialization type: '.$type);
     }
 }

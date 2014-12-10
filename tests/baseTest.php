@@ -23,7 +23,9 @@ class BaseTest extends PHPUnit_Framework_TestCase {
     public function testTTL() {
         $key = __FUNCTION__;
         $value = 'hello world';
-        $this->cache->set($key, $value, 2);
+        $this->cache->set($key, $value, array(
+            'ttl' => 2,
+        ));
         $this->assertEquals($this->cache->get($key), $value);
         sleep(3);
         $this->assertEquals($this->cache->get($key), false);
@@ -32,7 +34,9 @@ class BaseTest extends PHPUnit_Framework_TestCase {
     public function testCompress() {
         $key = __FUNCTION__;
         $value = 'hello world';
-        $this->cache->set($key, $value, null, true);
+        $this->cache->set($key, $value, array(
+            'compress' => true
+        ));
         $meta = $this->cache->getMeta($key);
         $this->assertEquals($meta['compress'], '1');
         $this->assertEquals($this->cache->get($key), $value);
