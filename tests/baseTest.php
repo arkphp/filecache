@@ -1,5 +1,5 @@
 <?php
-use ddliu\filecache\FileCache;
+use Ark\Filecache\FileCache;
 
 class BaseTest extends PHPUnit_Framework_TestCase {
     protected $cache;

@@ -1,11 +1,11 @@
 <?php
 /**
  * filecache
- * @copyright 2014 Liu Dong <ddliuhb@gmail.com>
+ * @copyright 2015 Liu Dong <ddliuhb@gmail.com>
  * @license MIT
  */
 
-namespace ddliu\filecache;
+namespace Ark\Filecache;
 
 class FileCache {
     protected $options = array();

@@ -1,5 +1,5 @@
 <?php
-namespace ddliu\filecache;
+namespace Ark\Filecache;
 
 class Util {
     public static function writeFile($path, $content) {

@@ -1,4 +1,4 @@
-# filecache [![Build Status](https://travis-ci.org/ddliu/php-filecache.svg)](https://travis-ci.org/ddliu/php-filecache)
+# filecache
 
 Cache with file system.
 
@@ -15,14 +15,14 @@ In cases you don't want to have other dependencies or don't want to waste your R
 ## Installation
 
 ```
-composer require ddliu/filecache
+composer require ark/filecache
 ```
 
 ## Usage
 
 ```php
 <?php
-use ddliu\filecache\FileCache;
+use Ark\Filecache\FileCache;
 
 $cache = new FileCache([
     'root' => '/path/to/cache/root', // Cache root
