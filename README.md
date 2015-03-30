@@ -1,4 +1,4 @@
-# filecache
+# filecache [![Build Status](https://travis-ci.org/arkphp/filecache.png)](https://travis-ci.org/arkphp/filecache)
 
 Cache with file system.
 
